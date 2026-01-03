@@ -1,26 +1,20 @@
 FROM rust:1.85-alpine AS builder
 
-# Install build dependencies
-RUN apk add --no-cache musl-dev
+WORKDIR /app
 
-WORKDIR /build
+# Copy dependency first
+COPY lib-analytics-core /lib-analytics-core
 
-# Copy analytics core library
-COPY crates/lib-analytics-core ./crates/lib-analytics-core
+# Copy ingestion service
+COPY adi-analytics-ingestion .
 
-# Copy analytics ingestion
-COPY crates/adi-analytics-ingestion ./crates/adi-analytics-ingestion
+RUN apk add --no-cache musl-dev && cargo build --release
 
-# Build
-WORKDIR /build/crates/adi-analytics-ingestion
-RUN cargo build --release
-
-# Runtime image
 FROM alpine:latest
 
 RUN apk add --no-cache ca-certificates curl
 
-COPY --from=builder /build/crates/adi-analytics-ingestion/target/release/adi-analytics-ingestion /usr/local/bin/
+COPY --from=builder /app/target/release/adi-analytics-ingestion /usr/local/bin/
 
 EXPOSE 8094
 
