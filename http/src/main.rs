@@ -1,12 +1,7 @@
 use adi_analytics_ingestion_core::EventWriter;
-use axum::{
-    extract::State,
-    http::StatusCode,
-    response::IntoResponse,
-    routing::post,
-    Json, Router,
-};
+use axum::{Json, Router, extract::State, http::StatusCode, response::IntoResponse, routing::post};
 use lib_analytics_core::EnrichedEvent;
+use lib_http_common::version_header_layer;
 use sqlx::postgres::PgPoolOptions;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -51,6 +46,10 @@ async fn main() -> anyhow::Result<()> {
     let app = Router::new()
         .route("/health", axum::routing::get(health_check))
         .route("/events/batch", post(ingest_events))
+        .layer(version_header_layer(
+            env!("CARGO_PKG_NAME"),
+            env!("CARGO_PKG_VERSION"),
+        ))
         .layer(TraceLayer::new_for_http())
         .with_state(state);
 
@@ -88,14 +87,10 @@ async fn ingest_events(
     tracing::debug!("Received batch of {} events", count);
 
     // Write to database
-    state
-        .writer
-        .write_batch(&events)
-        .await
-        .map_err(|e| {
-            tracing::error!("Failed to write events to database: {}", e);
-            StatusCode::INTERNAL_SERVER_ERROR
-        })?;
+    state.writer.write_batch(&events).await.map_err(|e| {
+        tracing::error!("Failed to write events to database: {}", e);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
 
     Ok((
         StatusCode::OK,
