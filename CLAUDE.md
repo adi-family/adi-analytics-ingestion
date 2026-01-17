@@ -67,7 +67,7 @@ Services that send events to this ingestion service:
 - **adi-platform-api**: API requests, tasks, integrations
 - **adi-auth-http**: Authentication events
 - **tarminal-signaling-server**: Cocoon connections
-- **cocoon-manager**: Cocoon orchestration
+- **hive**: Cocoon orchestration
 
 All services use `lib-analytics-core::AnalyticsClient` to send events.
 
