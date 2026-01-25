@@ -2,6 +2,7 @@ use adi_analytics_ingestion_core::EventWriter;
 use axum::{Json, Router, extract::State, http::StatusCode, response::IntoResponse, routing::post};
 use lib_analytics_core::EnrichedEvent;
 use lib_http_common::version_header_layer;
+use lib_logging_core::trace_layer;
 use sqlx::postgres::PgPoolOptions;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -50,6 +51,7 @@ async fn main() -> anyhow::Result<()> {
             env!("CARGO_PKG_NAME"),
             env!("CARGO_PKG_VERSION"),
         ))
+        .layer(trace_layer())
         .layer(TraceLayer::new_for_http())
         .with_state(state);
 
