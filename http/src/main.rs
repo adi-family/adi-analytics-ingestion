@@ -1,3 +1,5 @@
+mod generated;
+
 use analytics_ingestion_core::EventWriter;
 use axum::{Json, Router, extract::State, http::StatusCode, response::IntoResponse, routing::post};
 use lib_analytics_core::EnrichedEvent;
