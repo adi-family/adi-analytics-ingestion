@@ -1,5 +1,5 @@
 [package]
-name = "adi-analytics-ingestion-core"
+name = "analytics-ingestion-core"
 version = "0.1.0"
 edition = "2021"
 license = "BSL-1.0"

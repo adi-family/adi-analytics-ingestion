@@ -1,4 +1,4 @@
-use adi_analytics_ingestion_core::EventWriter;
+use analytics_ingestion_core::EventWriter;
 use axum::{Json, Router, extract::State, http::StatusCode, response::IntoResponse, routing::post};
 use lib_analytics_core::EnrichedEvent;
 use lib_http_common::version_header_layer;
