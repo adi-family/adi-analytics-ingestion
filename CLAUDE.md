@@ -66,7 +66,7 @@ PORT=8094 DATABASE_URL=postgres://... cargo run
 Services that send events to this ingestion service:
 - **adi-platform-api**: API requests, tasks, integrations
 - **adi-auth-http**: Authentication events
-- **tarminal-signaling-server**: Cocoon connections
+- **signaling-server**: Cocoon connections
 - **hive**: Cocoon orchestration
 
 All services use `lib-analytics-core::AnalyticsClient` to send events.
