@@ -64,7 +64,7 @@ PORT=8094 DATABASE_URL=postgres://... cargo run
 ## Event Sources
 
 Services that send events to this ingestion service:
-- **adi-platform-api**: API requests, tasks, integrations
+- **adi-platform**: API requests, tasks, integrations
 - **adi-auth-http**: Authentication events
 - **signaling-server**: Cocoon connections
 - **hive**: Cocoon orchestration
@@ -99,8 +99,8 @@ All services use `lib-analytics-core::AnalyticsClient` to send events.
 
 This service is **write-only**:
 - ✅ Receives and writes analytics events
-- ❌ No read/query endpoints (handled by adi-analytics-api)
+- ❌ No read/query endpoints (handled by adi-analytics)
 - ✅ Safe to scale horizontally (multiple instances)
 - ✅ No event processing logic (just persistence)
 
-For querying analytics data, see `adi-analytics-api` documentation.
+For querying analytics data, see `adi-analytics` documentation.
