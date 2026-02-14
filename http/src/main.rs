@@ -9,6 +9,14 @@ use sqlx::postgres::PgPoolOptions;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
+use lib_env_parse::{env_vars, env_opt};
+
+env_vars! {
+    DatabaseUrl => "DATABASE_URL",
+    PlatformDatabaseUrl => "PLATFORM_DATABASE_URL",
+    Port => "PORT",
+}
+
 #[derive(Clone)]
 struct AppState {
     writer: EventWriter,
@@ -29,8 +37,8 @@ async fn main() -> anyhow::Result<()> {
         .init();
 
     // Get database URL
-    let database_url = std::env::var("DATABASE_URL")
-        .or_else(|_| std::env::var("PLATFORM_DATABASE_URL"))
+    let database_url = env_opt(EnvVar::DatabaseUrl.as_str())
+        .or_else(|| env_opt(EnvVar::PlatformDatabaseUrl.as_str()))
         .expect("DATABASE_URL or PLATFORM_DATABASE_URL must be set");
 
     // Create database pool
@@ -58,8 +66,7 @@ async fn main() -> anyhow::Result<()> {
         .with_state(state);
 
     // Get port from environment
-    let port = std::env::var("PORT")
-        .ok()
+    let port = env_opt(EnvVar::Port.as_str())
         .and_then(|p| p.parse().ok())
         .unwrap_or(8094);
 

@@ -48,5 +48,8 @@ dotenvy = "0.15"
 # HTTP utilities
 lib-http-common = { path = "../../lib/lib-http-common" }
 
+# Environment
+lib-env-parse = { path = "../../lib/lib-env-parse" }
+
 # Logging
 lib-logging-core = { path = "../../lib/lib-logging-core", features = ["axum-08-compat"] }
